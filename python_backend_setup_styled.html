@@ -1,0 +1,728 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Python Backend Setup Commands — Scratch to Production</title><style>
+:root{--navy:#132238;--blue:#2563eb;--teal:#0f9d8a;--purple:#7557d9;--amber:#d97706;--ink:#243247;--muted:#607086;--paper:#f4f7fb;--line:#dce5f0;--code:#101b2d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 "Segoe UI",Arial,sans-serif}
+.hero{background:linear-gradient(125deg,#12233d,#1d4ed8 58%,#0f9d8a);color:white;padding:52px 24px}.hero-inner{max-width:1180px;margin:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;font-weight:800;opacity:.85}h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.1;margin:.5rem 0 1rem}
+.hero p{max-width:850px;color:#e7efff}.pills{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}.pill{border:1px solid #ffffff66;background:#ffffff18;padding:5px 12px;border-radius:999px;font-size:.85rem}
+.layout{max-width:1180px;margin:28px auto;padding:0 20px 60px;display:grid;grid-template-columns:235px minmax(0,1fr);gap:24px}
+nav{align-self:start;position:sticky;top:18px;background:white;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 8px 24px #17365d0b}nav h2{font-size:.9rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 12px}
+nav a{display:block;text-decoration:none;color:#33445d;padding:7px 9px;border-radius:8px;font-size:.9rem;line-height:1.35}nav a:hover{background:#eaf1ff;color:var(--blue)}
+main{min-width:0}main>h2{margin:24px 0 14px;padding:15px 18px;border-radius:12px;background:white;border:1px solid var(--line);border-left:6px solid var(--blue);box-shadow:0 5px 18px #17365d08;font-size:1.4rem;color:var(--navy)}
+main>h2:nth-of-type(2n){border-left-color:var(--teal)}main>h2:nth-of-type(3n){border-left-color:var(--purple)}
+main>h3{margin:25px 0 12px;padding:10px 14px;background:#e9f1ff;border-radius:9px;border-left:4px solid var(--blue);color:#1742a0;font-size:1.08rem}
+table{width:100%;border-collapse:separate;border-spacing:0;background:white;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 5px 18px #17365d08;font-size:.91rem;display:block;overflow-x:auto}
+thead th{background:var(--navy);color:white;font-weight:700;text-align:left}th,td{padding:11px 13px;border-bottom:1px solid #e7edf5;vertical-align:top;min-width:130px}
+tbody tr:nth-child(even){background:#f7faff}tbody tr:last-child td{border-bottom:0}td:first-child{font-weight:650;color:#243b5a}
+code{font-family:Consolas,monospace;background:#eaf0f8;color:#174a8b;padding:2px 5px;border-radius:5px;font-size:.9em;overflow-wrap:anywhere}
+pre{background:var(--code);color:#e5edf8;padding:20px;border-radius:12px;overflow-x:auto;border:1px solid #243954;box-shadow:0 8px 22px #13223812}pre code{background:transparent;color:inherit;padding:0;white-space:pre}
+blockquote{padding:12px 18px;background:#fff7e8;border-left:4px solid var(--amber);border-radius:8px;color:#70420c}
+li{margin:5px 0}a{color:var(--blue)}footer{max-width:1180px;margin:-25px auto 0;padding:0 20px 35px;color:var(--muted);font-size:.85rem}
+@media(max-width:850px){.layout{grid-template-columns:1fr}nav{position:static}nav a{display:inline-block;margin:2px}.hero{padding:36px 20px}}
+@media print{body{background:white}.hero{padding:25px}.layout{display:block;margin:0 auto}nav{display:none}main>h2,main>h3,table,pre{break-inside:avoid}}
+</style></head><body>
+<header class="hero"><div class="hero-inner"><div class="eyebrow">Developer Reference • Python Backend</div><h1>Python Backend Setup Commands</h1><p>Scratch to Production — a structured command reference for <strong>uv, FastAPI, PostgreSQL, SQLAlchemy, Alembic, Docker</strong>, with Node.js/npm equivalents.</p><div class="pills"><span class="pill">Python 3.12</span><span class="pill">uv</span><span class="pill">FastAPI</span><span class="pill">PostgreSQL</span><span class="pill">Node.js comparison</span></div></div></header>
+<div class="layout"><nav aria-label="Contents"><h2>On this page</h2><a href="#section-1">1. Difference between `pip`, `uv`, and `npm`</a><a href="#section-2">2. Complete setup commands: scratch to production</a><a href="#section-3">3. Additional commands you should know</a><a href="#section-4">4. My recommended command sequence</a></nav><main><h1>Python Backend Setup Commands: Scratch to Production</h1>
+<p>For your Python backend learning, use <code>uv</code> as the primary Python project and dependency manager, FastAPI for APIs, SQLAlchemy + Alembic for database access and migrations, PostgreSQL for persistence, and Docker for deployment.</p>
+<p>The table below compares Python <code>pip</code>, Python <code>uv</code>, and Node.js <code>npm</code> commands. They are comparable workflows, but not every command has an exact equivalent.</p>
+<h2 id="section-1">1. Difference between <code>pip</code>, <code>uv</code>, and <code>npm</code></h2>
+<table>
+<thead>
+<tr>
+  <th>Task</th>
+  <th>Python using <code>pip</code></th>
+  <th>Python using <code>uv</code></th>
+  <th>Node.js using <code>npm</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Install Python runtime</td>
+  <td>Install Python separately</td>
+  <td><code>uv python install 3.12</code></td>
+  <td>Install Node.js separately</td>
+</tr>
+<tr>
+  <td>Initialize project</td>
+  <td>Create files manually</td>
+  <td><code>uv init product-api --bare</code></td>
+  <td><code>mkdir product-api</code></td>
+</tr>
+<tr>
+  <td>Enter project</td>
+  <td><code>cd product-api</code></td>
+  <td><code>cd product-api</code></td>
+  <td><code>cd product-api</code></td>
+</tr>
+<tr>
+  <td>Create project environment</td>
+  <td><code>python -m venv .venv</code></td>
+  <td><code>uv venv --python 3.12</code></td>
+  <td><code>npm init -y</code> creates <code>package.json</code>; no venv required</td>
+</tr>
+<tr>
+  <td>Pin runtime version</td>
+  <td>Configure separately</td>
+  <td><code>uv python pin 3.12</code></td>
+  <td>Use <code>.nvmrc</code> or a version manager</td>
+</tr>
+<tr>
+  <td>Activate virtual environment</td>
+  <td><code>.\.venv\Scripts\Activate.ps1</code> (PowerShell)</td>
+  <td><code>.\.venv\Scripts\Activate.ps1</code> (PowerShell)</td>
+  <td>Not applicable</td>
+</tr>
+<tr>
+  <td>Install a package</td>
+  <td><code>python -m pip install fastapi</code></td>
+  <td><code>uv add fastapi</code></td>
+  <td><code>npm install express</code></td>
+</tr>
+<tr>
+  <td>Install development packages</td>
+  <td><code>python -m pip install pytest</code></td>
+  <td><code>uv add --dev pytest</code></td>
+  <td><code>npm install -D jest</code></td>
+</tr>
+<tr>
+  <td>Install from requirements file</td>
+  <td><code>python -m pip install -r requirements.txt</code></td>
+  <td><code>uv pip install -r requirements.txt</code></td>
+  <td><code>npm install</code> from <code>package.json</code></td>
+</tr>
+<tr>
+  <td>Install project dependencies</td>
+  <td><code>python -m pip install ...</code></td>
+  <td><code>uv sync</code></td>
+  <td><code>npm install</code></td>
+</tr>
+<tr>
+  <td>Install exactly from lockfile</td>
+  <td>Requires a pinned requirements file</td>
+  <td><code>uv sync --locked</code></td>
+  <td><code>npm ci</code></td>
+</tr>
+<tr>
+  <td>Run a Python file</td>
+  <td><code>python main.py</code></td>
+  <td><code>uv run python main.py</code></td>
+  <td><code>node main.js</code></td>
+</tr>
+<tr>
+  <td>Run an installed CLI</td>
+  <td><code>python -m uvicorn app.main:app --reload</code></td>
+  <td><code>uv run uvicorn app.main:app --reload</code></td>
+  <td><code>npx nodemon src/server.js</code></td>
+</tr>
+<tr>
+  <td>Add a dependency</td>
+  <td>Install it, then maintain requirements manually</td>
+  <td><code>uv add sqlalchemy</code></td>
+  <td><code>npm install sequelize</code></td>
+</tr>
+<tr>
+  <td>Remove a dependency</td>
+  <td><code>python -m pip uninstall fastapi</code></td>
+  <td><code>uv remove fastapi</code></td>
+  <td><code>npm uninstall express</code></td>
+</tr>
+<tr>
+  <td>Update dependencies</td>
+  <td><code>python -m pip install --upgrade fastapi</code></td>
+  <td><code>uv lock --upgrade</code></td>
+  <td><code>npm update</code></td>
+</tr>
+<tr>
+  <td>List installed dependencies</td>
+  <td><code>python -m pip list</code></td>
+  <td><code>uv pip list</code></td>
+  <td><code>npm ls --depth=0</code></td>
+</tr>
+<tr>
+  <td>Inspect dependency tree</td>
+  <td><code>python -m pip show fastapi</code></td>
+  <td><code>uv tree</code></td>
+  <td><code>npm ls</code></td>
+</tr>
+<tr>
+  <td>Export requirements</td>
+  <td><code>python -m pip freeze &gt; requirements.txt</code></td>
+  <td><code>uv export --format requirements-txt --output-file requirements.txt</code></td>
+  <td><code>npm list --depth=0</code> (not a lockfile export)</td>
+</tr>
+<tr>
+  <td>Run tests</td>
+  <td><code>python -m pytest</code></td>
+  <td><code>uv run pytest</code></td>
+  <td><code>npm test</code></td>
+</tr>
+<tr>
+  <td>Lint code</td>
+  <td>Install and configure Ruff separately</td>
+  <td><code>uv run ruff check .</code></td>
+  <td><code>npx eslint .</code></td>
+</tr>
+<tr>
+  <td>Format code</td>
+  <td>Install and configure a formatter</td>
+  <td><code>uv run ruff format .</code></td>
+  <td><code>npx prettier --write .</code></td>
+</tr>
+<tr>
+  <td>Build Docker image</td>
+  <td><code>docker build -t product-api .</code></td>
+  <td><code>docker build -t product-api .</code></td>
+  <td><code>docker build -t product-api .</code></td>
+</tr>
+</tbody>
+</table>
+<p>Important distinction: <code>uv add</code> updates the project's dependency declarations and lockfile. <code>uv pip install</code> is closer to pip and installs into an environment without managing the project dependencies in the same way. For a new <code>uv</code> project, prefer <code>uv add</code> and <code>uv sync</code>.</p>
+<h2 id="section-2">2. Complete setup commands: scratch to production</h2>
+<p>These commands assume Windows PowerShell, Python 3.12, and a new FastAPI project named <code>product-api</code>.</p>
+<h3>Phase 1 — Install runtimes and initialize the project</h3>
+<table>
+<thead>
+<tr>
+  <th>Task</th>
+  <th>Python + <code>uv</code></th>
+  <th>Node.js + <code>npm</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Install Python runtime</td>
+  <td><code>uv python install 3.12</code></td>
+  <td>Install Node.js LTS</td>
+</tr>
+<tr>
+  <td>Create project</td>
+  <td><code>uv init product-api --bare</code></td>
+  <td><code>mkdir product-api</code></td>
+</tr>
+<tr>
+  <td>Enter project</td>
+  <td><code>cd product-api</code></td>
+  <td><code>cd product-api</code></td>
+</tr>
+<tr>
+  <td>Pin Python version</td>
+  <td><code>uv python pin 3.12</code></td>
+  <td><code>node --version</code></td>
+</tr>
+<tr>
+  <td>Initialize Node manifest</td>
+  <td>Not required; <code>uv init</code> creates <code>pyproject.toml</code></td>
+  <td><code>npm init -y</code></td>
+</tr>
+<tr>
+  <td>Verify runtime</td>
+  <td><code>uv run python --version</code></td>
+  <td><code>node --version</code></td>
+</tr>
+<tr>
+  <td>Verify package manager</td>
+  <td><code>uv --version</code></td>
+  <td><code>npm --version</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Phase 2 — Create and configure the environment</h3>
+<table>
+<thead>
+<tr>
+  <th>Task</th>
+  <th>Python + <code>uv</code></th>
+  <th>Node.js + <code>npm</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Create environment</td>
+  <td><code>uv venv --python 3.12</code></td>
+  <td>Not required</td>
+</tr>
+<tr>
+  <td>Activate environment</td>
+  <td><code>.\.venv\Scripts\Activate.ps1</code></td>
+  <td>Not required</td>
+</tr>
+<tr>
+  <td>Install FastAPI</td>
+  <td><code>uv add &quot;fastapi[standard]&quot;</code></td>
+  <td><code>npm install express</code></td>
+</tr>
+<tr>
+  <td>Add PostgreSQL driver</td>
+  <td><code>uv add &quot;psycopg[binary]&quot;</code></td>
+  <td><code>npm install pg</code></td>
+</tr>
+<tr>
+  <td>Add ORM</td>
+  <td><code>uv add sqlalchemy</code></td>
+  <td><code>npm install sequelize</code> or <code>npm install prisma @prisma/client</code></td>
+</tr>
+<tr>
+  <td>Add migration tool</td>
+  <td><code>uv add alembic</code></td>
+  <td><code>npx prisma init</code> (Prisma alternative)</td>
+</tr>
+<tr>
+  <td>Add settings management</td>
+  <td><code>uv add pydantic-settings</code></td>
+  <td><code>npm install dotenv</code></td>
+</tr>
+<tr>
+  <td>Add development dependencies</td>
+  <td><code>uv add --dev pytest httpx ruff</code></td>
+  <td><code>npm install -D jest supertest eslint prettier</code></td>
+</tr>
+<tr>
+  <td>Resolve dependencies</td>
+  <td><code>uv lock</code></td>
+  <td><code>npm install</code> generates/updates <code>package-lock.json</code></td>
+</tr>
+<tr>
+  <td>Install/sync dependencies</td>
+  <td><code>uv sync</code></td>
+  <td><code>npm install</code></td>
+</tr>
+</tbody>
+</table>
+<p>Recommended initial Python install command:</p>
+<pre><code>uv add &quot;fastapi[standard]&quot; sqlalchemy alembic &quot;psycopg[binary]&quot; pydantic-settings
+uv add --dev pytest httpx ruff
+</code></pre>
+<p>This covers the core framework, PostgreSQL access, ORM, migrations, configuration, testing, and linting/formatting.</p>
+<h3>Phase 3 — Create the application structure</h3>
+<table>
+<thead>
+<tr>
+  <th>Task</th>
+  <th>Python + FastAPI</th>
+  <th>Node.js + Express</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Create source folder</td>
+  <td><code>New-Item -ItemType Directory -Force app</code></td>
+  <td><code>mkdir src</code></td>
+</tr>
+<tr>
+  <td>Create API folder</td>
+  <td><code>New-Item -ItemType Directory -Force app\api\routes</code></td>
+  <td><code>mkdir src\routes</code></td>
+</tr>
+<tr>
+  <td>Create configuration folder</td>
+  <td><code>New-Item -ItemType Directory -Force app\core</code></td>
+  <td><code>mkdir src\config</code></td>
+</tr>
+<tr>
+  <td>Create database folder</td>
+  <td><code>New-Item -ItemType Directory -Force app\db</code></td>
+  <td><code>mkdir src\db</code></td>
+</tr>
+<tr>
+  <td>Create models folder</td>
+  <td><code>New-Item -ItemType Directory -Force app\models</code></td>
+  <td><code>mkdir src\models</code></td>
+</tr>
+<tr>
+  <td>Create schemas folder</td>
+  <td><code>New-Item -ItemType Directory -Force app\schemas</code></td>
+  <td><code>mkdir src\schemas</code></td>
+</tr>
+<tr>
+  <td>Create service folder</td>
+  <td><code>New-Item -ItemType Directory -Force app\services</code></td>
+  <td><code>mkdir src\services</code></td>
+</tr>
+<tr>
+  <td>Create repository folder</td>
+  <td><code>New-Item -ItemType Directory -Force app\repositories</code></td>
+  <td><code>mkdir src\repositories</code></td>
+</tr>
+<tr>
+  <td>Create tests folder</td>
+  <td><code>New-Item -ItemType Directory -Force tests</code></td>
+  <td><code>mkdir tests</code></td>
+</tr>
+<tr>
+  <td>Create entry file</td>
+  <td><code>New-Item app\main.py -ItemType File</code></td>
+  <td><code>New-Item src\server.js -ItemType File</code></td>
+</tr>
+</tbody>
+</table>
+<p>Recommended structure:</p>
+<pre><code>product-api/
+├── app/
+│   ├── main.py
+│   ├── api/
+│   │   └── routes/
+│   ├── core/
+│   │   └── config.py
+│   ├── db/
+│   │   ├── base.py
+│   │   └── session.py
+│   ├── models/
+│   ├── schemas/
+│   ├── repositories/
+│   └── services/
+├── tests/
+├── alembic/
+├── .env
+├── .env.example
+├── .gitignore
+├── Dockerfile
+├── compose.yaml
+├── pyproject.toml
+└── uv.lock
+</code></pre>
+<h3>Phase 4 — Run the application locally</h3>
+<table>
+<thead>
+<tr>
+  <th>Task</th>
+  <th>Python + FastAPI</th>
+  <th>Node.js + Express</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Run a Python file</td>
+  <td><code>uv run python app\main.py</code></td>
+  <td><code>node src\server.js</code></td>
+</tr>
+<tr>
+  <td>Start development server</td>
+  <td><code>uv run fastapi dev app/main.py</code></td>
+  <td><code>npx nodemon src/server.js</code></td>
+</tr>
+<tr>
+  <td>Start with Uvicorn</td>
+  <td><code>uv run uvicorn app.main:app --reload</code></td>
+  <td><code>node src/server.js</code></td>
+</tr>
+<tr>
+  <td>Start production server locally</td>
+  <td><code>uv run fastapi run app/main.py</code></td>
+  <td><code>node src/server.js</code></td>
+</tr>
+<tr>
+  <td>Run with environment variables</td>
+  <td>Configure <code>pydantic-settings</code> and <code>.env</code></td>
+  <td>Configure <code>dotenv</code> and <code>.env</code></td>
+</tr>
+<tr>
+  <td>Check Python imports</td>
+  <td><code>uv run python -c &quot;import fastapi; print(fastapi.__version__)&quot;</code></td>
+  <td><code>node -e &quot;console.log(require('express/package.json').version)&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<p>For the Uvicorn command, <code>app.main:app</code> means the <code>app/main.py</code> module and the <code>app</code> variable inside that module. Your file should contain <code>app = FastAPI()</code>.</p>
+<p>Development commands enable convenient reload behavior. Production commands should run without development reload.</p>
+<h3>Phase 5 — Database and migrations</h3>
+<table>
+<thead>
+<tr>
+  <th>Task</th>
+  <th>Python + SQLAlchemy/Alembic</th>
+  <th>Node.js alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Initialize migrations</td>
+  <td><code>uv run alembic init alembic</code></td>
+  <td><code>npx prisma init</code></td>
+</tr>
+<tr>
+  <td>Generate migration</td>
+  <td><code>uv run alembic revision --autogenerate -m &quot;create products table&quot;</code></td>
+  <td><code>npx prisma migrate dev --name create_products</code></td>
+</tr>
+<tr>
+  <td>Apply migrations</td>
+  <td><code>uv run alembic upgrade head</code></td>
+  <td><code>npx prisma migrate deploy</code></td>
+</tr>
+<tr>
+  <td>Roll back one migration</td>
+  <td><code>uv run alembic downgrade -1</code></td>
+  <td>Use the migration tool's rollback workflow</td>
+</tr>
+<tr>
+  <td>View migration history</td>
+  <td><code>uv run alembic history</code></td>
+  <td><code>npx prisma migrate status</code></td>
+</tr>
+<tr>
+  <td>Check current migration</td>
+  <td><code>uv run alembic current</code></td>
+  <td><code>npx prisma migrate status</code></td>
+</tr>
+<tr>
+  <td>Connect to PostgreSQL</td>
+  <td>Configure SQLAlchemy engine/session</td>
+  <td>Configure <code>pg</code>, Sequelize, or Prisma</td>
+</tr>
+</tbody>
+</table>
+<p>Before generating migrations, configure Alembic to load your SQLAlchemy model metadata. Otherwise, autogeneration may not detect your tables. Review every generated migration before applying it.</p>
+<h3>Phase 6 — Code quality and testing</h3>
+<table>
+<thead>
+<tr>
+  <th>Task</th>
+  <th>Python + <code>uv</code></th>
+  <th>Node.js + <code>npm</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Run tests</td>
+  <td><code>uv run pytest</code></td>
+  <td><code>npm test</code></td>
+</tr>
+<tr>
+  <td>Verbose test output</td>
+  <td><code>uv run pytest -v</code></td>
+  <td><code>npx jest --verbose</code></td>
+</tr>
+<tr>
+  <td>Run tests with coverage</td>
+  <td>Add <code>pytest-cov</code>, then <code>uv run pytest --cov=app</code></td>
+  <td><code>npm install -D jest</code> and configure coverage</td>
+</tr>
+<tr>
+  <td>Lint</td>
+  <td><code>uv run ruff check .</code></td>
+  <td><code>npx eslint .</code></td>
+</tr>
+<tr>
+  <td>Auto-fix lint issues</td>
+  <td><code>uv run ruff check . --fix</code></td>
+  <td><code>npx eslint . --fix</code></td>
+</tr>
+<tr>
+  <td>Format</td>
+  <td><code>uv run ruff format .</code></td>
+  <td><code>npx prettier --write .</code></td>
+</tr>
+<tr>
+  <td>Check formatting without changes</td>
+  <td><code>uv run ruff format --check .</code></td>
+  <td><code>npx prettier --check .</code></td>
+</tr>
+<tr>
+  <td>Verify dependencies</td>
+  <td><code>uv tree</code></td>
+  <td><code>npm ls</code></td>
+</tr>
+</tbody>
+</table>
+<p>If you use coverage in Python, add the development dependency first:</p>
+<pre><code>uv add --dev pytest-cov
+</code></pre>
+<h3>Phase 7 — Lockfile, environment, and Git</h3>
+<table>
+<thead>
+<tr>
+  <th>Task</th>
+  <th>Python + <code>uv</code></th>
+  <th>Node.js + <code>npm</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Initialize Git</td>
+  <td><code>git init</code></td>
+  <td><code>git init</code></td>
+</tr>
+<tr>
+  <td>Check changes</td>
+  <td><code>git status</code></td>
+  <td><code>git status</code></td>
+</tr>
+<tr>
+  <td>Ignore local environment</td>
+  <td>Add <code>.venv/</code> and <code>.env</code> to <code>.gitignore</code></td>
+  <td>Add <code>node_modules/</code> and <code>.env</code> to <code>.gitignore</code></td>
+</tr>
+<tr>
+  <td>Update lockfile</td>
+  <td><code>uv lock</code></td>
+  <td><code>npm install</code></td>
+</tr>
+<tr>
+  <td>Strict lockfile validation</td>
+  <td><code>uv lock --check</code></td>
+  <td><code>npm ci</code> validates consistency and installs from lockfile</td>
+</tr>
+<tr>
+  <td>Reproduce locked environment</td>
+  <td><code>uv sync --locked</code></td>
+  <td><code>npm ci</code></td>
+</tr>
+<tr>
+  <td>Install production dependencies only</td>
+  <td><code>uv sync --locked --no-dev</code></td>
+  <td><code>npm ci --omit=dev</code></td>
+</tr>
+<tr>
+  <td>Export requirements if needed</td>
+  <td><code>uv export --format requirements-txt --output-file requirements.txt</code></td>
+  <td><code>npm shrinkwrap</code> (different purpose and format)</td>
+</tr>
+</tbody>
+</table>
+<p>Keep <code>uv.lock</code> and <code>pyproject.toml</code> in source control. Do not commit <code>.env</code> or your local <code>.venv</code> directory.</p>
+<h3>Phase 8 — Docker and production deployment</h3>
+<table>
+<thead>
+<tr>
+  <th>Task</th>
+  <th>Python + FastAPI</th>
+  <th>Node.js + Express</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Build image</td>
+  <td><code>docker build -t product-api .</code></td>
+  <td><code>docker build -t product-api .</code></td>
+</tr>
+<tr>
+  <td>Start services</td>
+  <td><code>docker compose up -d --build</code></td>
+  <td><code>docker compose up -d --build</code></td>
+</tr>
+<tr>
+  <td>View running containers</td>
+  <td><code>docker compose ps</code></td>
+  <td><code>docker compose ps</code></td>
+</tr>
+<tr>
+  <td>Follow application logs</td>
+  <td><code>docker compose logs -f api</code></td>
+  <td><code>docker compose logs -f api</code></td>
+</tr>
+<tr>
+  <td>Stop services</td>
+  <td><code>docker compose down</code></td>
+  <td><code>docker compose down</code></td>
+</tr>
+<tr>
+  <td>Rebuild image</td>
+  <td><code>docker compose build --no-cache</code></td>
+  <td><code>docker compose build --no-cache</code></td>
+</tr>
+<tr>
+  <td>Check container resource usage</td>
+  <td><code>docker stats</code></td>
+  <td><code>docker stats</code></td>
+</tr>
+<tr>
+  <td>Run migrations in deployment</td>
+  <td><code>docker compose run --rm api uv run alembic upgrade head</code>*</td>
+  <td>Use the configured migration command in a one-off container</td>
+</tr>
+</tbody>
+</table>
+<p>*This migration command assumes the image contains <code>uv</code> and the project environment. If your production image uses a different entrypoint or runtime layout, adjust the command accordingly.</p>
+<p>For production, also configure health checks, structured logging, graceful shutdown, database connection pooling, secrets management, TLS, authentication/authorization, backups, monitoring, and a safe migration strategy. Docker commands alone do not make an application production-ready.</p>
+<h2 id="section-3">3. Additional commands you should know</h2>
+<p>These are useful commands missing from the original table.</p>
+<table>
+<thead>
+<tr>
+  <th>Task</th>
+  <th>Python + <code>uv</code></th>
+  <th>Node.js + <code>npm</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>See Python installations</td>
+  <td><code>uv python list</code></td>
+  <td><code>nvm list</code> (if using NVM for Windows)</td>
+</tr>
+<tr>
+  <td>Install an exact dependency version</td>
+  <td><code>uv add &quot;fastapi==0.115.0&quot;</code></td>
+  <td><code>npm install express@4</code></td>
+</tr>
+<tr>
+  <td>Upgrade all lockfile dependencies</td>
+  <td><code>uv lock --upgrade</code></td>
+  <td><code>npm update</code></td>
+</tr>
+<tr>
+  <td>Remove package</td>
+  <td><code>uv remove fastapi</code></td>
+  <td><code>npm uninstall express</code></td>
+</tr>
+<tr>
+  <td>Check project dependency tree</td>
+  <td><code>uv tree</code></td>
+  <td><code>npm ls --all</code></td>
+</tr>
+<tr>
+  <td>Run command in project environment</td>
+  <td><code>uv run python -m pytest</code></td>
+  <td><code>npm run test</code></td>
+</tr>
+<tr>
+  <td>Create a migration without autogeneration</td>
+  <td><code>uv run alembic revision -m &quot;add product index&quot;</code></td>
+  <td>Create a migration through the chosen migration tool</td>
+</tr>
+<tr>
+  <td>Verify installed Python packages</td>
+  <td><code>uv pip list</code></td>
+  <td><code>npm ls --depth=0</code></td>
+</tr>
+<tr>
+  <td>Run API tests against a test client</td>
+  <td><code>uv run pytest</code> with HTTPX/FastAPI test client</td>
+  <td><code>npm test</code> with Supertest</td>
+</tr>
+</tbody>
+</table>
+<h2 id="section-4">4. My recommended command sequence</h2>
+<p>For a fresh FastAPI + PostgreSQL backend, run these in order:</p>
+<pre><code># 1. Install Python and initialize the project
+uv python install 3.12
+uv init product-api --bare
+cd product-api
+uv python pin 3.12
+
+# 2. Install application dependencies
+uv add &quot;fastapi[standard]&quot; sqlalchemy alembic &quot;psycopg[binary]&quot; pydantic-settings
+
+# 3. Install development dependencies
+uv add --dev pytest httpx ruff pytest-cov
+
+# 4. Create and synchronize the environment
+uv lock
+uv sync
+
+# 5. Initialize migrations after configuring SQLAlchemy metadata
+uv run alembic init alembic
+
+# 6. Run development server
+uv run fastapi dev app/main.py
+
+# 7. Quality checks
+uv run ruff check .
+uv run ruff format --check .
+uv run pytest
+
+# 8. Production dependency synchronization
+uv sync --locked --no-dev
+</code></pre>
+<p>The migration initialization step assumes you have created the <code>app</code> package and configured your Alembic settings before generating and applying database migrations.</p>
+<p>Recommended rule: use <code>uv add</code> when changing dependencies, <code>uv sync</code> to synchronize the environment, <code>uv run</code> to execute project commands, <code>uv.lock</code> to reproduce dependency versions, and <code>uv sync --locked --no-dev</code> for a production-oriented dependency installation.</p>
+</main></div><footer>Formatted reference based on the supplied notes. Commands and technical content are preserved; verify environment-specific details before production use.</footer></body></html>
